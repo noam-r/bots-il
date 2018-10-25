@@ -22,6 +22,11 @@ mv .env.example .env
 ``` 
 Edit the file with your favorite editor to enter a **CONSUMER_KEY** and a **CONSUMER_SECRET** (if you don't have any, you can [create some](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html) or just ask a friend).
 
+optional: you can make the script executable to avoid using "php" in the beginning:
+```bash
+chmod +x botsil.php
+```
+
 Once you have the envronment set up, you should run:
 ```bash
 ./botsil.php token
