@@ -15,6 +15,9 @@ $getOpt->addCommands([
 	\GetOpt\Command::create('profile', 'BotsIL\\Profile::get', [
 		\GetOpt\Option::create('n', 'name', \GetOpt\GetOpt::REQUIRED_ARGUMENT),
 	]),
+	\GetOpt\Command::create('favs', 'BotsIL\\Profile::favs', [
+		\GetOpt\Option::create('n', 'name', \GetOpt\GetOpt::REQUIRED_ARGUMENT),
+	]),
 ]);
 
 // process arguments and catch user errors

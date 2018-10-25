@@ -86,7 +86,7 @@ class Output {
 		}
 	}
 
-		public static function mentions($mentions, $total, $top=7) {
+	public static function mentions($mentions, $total, $top=7) {
 			CLI::newLine();
 			$caption = CLI::prepare('Mentions ; showing top  '.$top, CLI::C_BROWN);
 			echo $caption;
@@ -100,6 +100,21 @@ class Output {
 				]);
 				if (++$index==$top) break;
 			}
+
+	}
+
+	public static function favoritedUsers($favs, $total, $top=50) {
+		CLI::newLine();
+		echo CLI::prepare('Mentions ; showing top  '.$top, CLI::C_BROWN);
+		$tableColumns = [30, 70];
+		$index=0;
+		foreach ($favs as $user=>$value) {
+			echo CLI_Table::Row([
+				$tableColumns,
+				[CLI::caption($user), $value.' ('.(round(($value/$total)*100)).'%)']
+			]);
+			if (++$index==$top) break;
+		}
 
 	}
 
