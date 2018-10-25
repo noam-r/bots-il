@@ -15,12 +15,15 @@ class Profile {
 		Output::user($userObj);
 		$timeline = Timeline::get($username);
 		$timelineData=Timeline::parse($timeline);
+		$favedTweets =Favorites::get($username, 200);
+		$favedUsers = Favorites::getUsers($favedTweets);
 		Output::sources($timelineData['sources'], $timelineData['total']);
 		Output::languages($timelineData['languages'], $timelineData['total'], $userObj['lang']);
 		Output::hours($timelineData['times']);
 		Output::weekdays($timelineData['weekdays']);
 		Output::retweets($timelineData['retweets'], $timelineData['total']);
 		Output::mentions($timelineData['mentions'], $timelineData['total']);
+		Output::favoritedUsers($favedUsers, count($favedTweets), 7);
 	}
 
 	public static function favs(GetOpt $options) {

@@ -21,7 +21,7 @@ class CLI_Table extends CLI {
 		foreach ($rowArr[1] as $key=>$val) {
 			$colWidth = self::calculateWidth($rowArr[0][$key]);
 			//echo "val = ".$val.' ; width='.$colWidth."\n";
-			$output.=self::pad_right($val, $colWidth)."|";
+			$output.='|'.self::pad_right($val, $colWidth);
 		}
 		return $output.PHP_EOL;
 	}

@@ -105,7 +105,7 @@ class Output {
 
 	public static function favoritedUsers($favs, $total, $top=50) {
 		CLI::newLine();
-		echo CLI::prepare('Mentions ; showing top  '.$top, CLI::C_BROWN);
+		echo CLI::prepare('Favorites Users (last '.$total.') ; showing top  '.$top.' favorited users', CLI::C_BROWN);
 		$tableColumns = [30, 70];
 		$index=0;
 		foreach ($favs as $user=>$value) {
