@@ -4,7 +4,7 @@ This console is built to allow basic research on the twitter API.
 
 Several add-ons allows connecting to the project database and comparing data from the known bot-networks to assist in the research.
 
-The application uses **[Application-only authentication](Application-only authentication)** tokens, so no user details are required, just basic app credentials.
+The application uses [Application-only authentication](https://developer.twitter.com/en/docs/basics/authentication/overview/application-only) tokens, so no user details are required, just basic app credentials.
 
 ## Installation
 
@@ -21,6 +21,11 @@ Prepare your environment file
 mv .env.example .env
 ``` 
 Edit the file with your favorite editor to enter a **CONSUMER_KEY** and a **CONSUMER_SECRET** (if you don't have any, you can [create some](https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html) or just ask a friend).
+
+optional: you can make the script executable to avoid using "php" in the beginning:
+```bash
+chmod +x botsil.php
+```
 
 Once you have the envronment set up, you should run:
 ```bash
