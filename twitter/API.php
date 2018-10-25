@@ -42,6 +42,8 @@ class API {
 	}
 
 	private static function getBearer() {
+		if (!isset($_ENV['CONSUMER_KEY']) || empty($_ENV['CONSUMER_KEY']) || !isset($_ENV['CONSUMER_SECRET']) || empty($_ENV['CONSUMER_SECRET']))
+			CLI::endScript("check your configuration .env file");
 		return 'Basic '.base64_encode($_ENV['CONSUMER_KEY'].":".$_ENV['CONSUMER_SECRET']);
 	}
 
