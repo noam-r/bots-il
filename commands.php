@@ -18,6 +18,7 @@ $getOpt->addCommands([
 	\GetOpt\Command::create('favs', 'BotsIL\\Profile::favs', [
 		\GetOpt\Option::create('n', 'name', \GetOpt\GetOpt::REQUIRED_ARGUMENT),
 	]),
+	\GetOpt\Command::create('usage', 'Twitter\\AppStatus::process', []),
 ]);
 
 // process arguments and catch user errors

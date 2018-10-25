@@ -118,4 +118,22 @@ class Output {
 
 	}
 
+	public static function showLimits($limits) {
+		$columns=[40, 20, 40];
+		CLI::newLine();
+		echo CLI::prepare('Current Usage', CLI::C_BROWN);
+		echo CLI_Table::Row([
+			$columns,
+			[CLI::caption('Type'), CLI::caption('Limit'), CLI::caption('Remaining')]
+		]);
+		foreach ($limits as $section=>$data) {
+			foreach ($data as $type=>$limits) {
+				echo CLI_Table::Row([
+					$columns,
+					[CLI::caption($type), $limits['limit'], $limits['remaining']]
+				]);
+			}
+		}
+	}
+
 }
