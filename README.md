@@ -4,7 +4,7 @@ This console is built to allow basic research on the twitter API.
 
 Several add-ons allows connecting to the project database and comparing data from the known bot-networks to assist in the research.
 
-The application uses **[Application-only authentication](Application-only authentication)** tokens, so no user details are required, just basic app credentials.
+The application uses [Application-only authentication](Application-only authentication) tokens, so no user details are required, just basic app credentials.
 
 ## Installation
 
