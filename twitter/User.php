@@ -13,7 +13,7 @@ class User extends API {
 			$data = self::call(self::$url, ['screen_name' => $username]);
 			return \GuzzleHttp\json_decode($data, true);
 		} catch (\Exception $e) {
-			CLI::endScript("Error retreiving username ".$username);
+			CLI::endScript("Error retreiving username ".$username." :".$data);
 		}
 
 	}

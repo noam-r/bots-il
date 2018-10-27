@@ -54,7 +54,11 @@ class Timeline extends API {
 		} catch (\Exception $e) {
 			\BotsIL\CLI::endScript("Could not get tweets, error: ".$e->getMessage());
 		}
-		return \GuzzleHttp\json_decode($data, true);
+		try {
+			return \GuzzleHttp\json_decode($data, true);
+		} catch (\Exception $e) {
+			CLI::endScript("could not decode response: ".$data);
+		}
 	}
 
 	private static function getRetweetsAndMentions($timelineObj) {
