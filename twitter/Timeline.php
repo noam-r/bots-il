@@ -2,15 +2,34 @@
 
 namespace Twitter;
 
+use BotsIL\CLI;
+
 class Timeline extends API {
 
 	static $url='1.1/statuses/user_timeline.json';
+	static $maxTotalTweets = 600;
+	static $tweetsPerIteration = 200;
 
 	private static $weekDays=['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 	public static function get($username) {
-		$data = self::call(self::$url, ['screen_name'=>trim($username), 'count'=>200]);
-		return \GuzzleHttp\json_decode($data, true);
+		$tweets = [];
+		$iterations = 0;
+		$earliestID=null;
+		echo CLI::prepare("Getting tweets", CLI::C_GREEN, false);
+		while ($iterations < (self::$maxTotalTweets/self::$tweetsPerIteration)) {
+			$batch = self::getFromTwitter($username, $earliestID);
+			$progress = round((count($tweets)+count($batch))/self::$maxTotalTweets*100);
+			echo CLI::prepare("...".$progress."%", CLI::C_GREEN, false);
+			if (empty($batch)) break;
+			$earliestID = self::getOldestID($batch);
+			$tweets = array_merge($tweets, $batch);
+			if (count($tweets) >= self::$maxTotalTweets) break;
+			$iterations++;
+		}
+		CLI::newLine();
+		CLI::info("Parsing total ".count($tweets)." tweets");
+		return $tweets;
 	}
 
 	public static function parse($timelineObj) {
@@ -22,8 +41,18 @@ class Timeline extends API {
 			'sources'=>self::getSources($timelineObj),
 			'languages'=>self::getLanguages($timelineObj),
 			'weekdays'=>self::getWeekdays($timelineObj),
-			'times'=>self::getTimes($timelineObj)
+			'times'=>self::getTimes($timelineObj),
+			'firstDaysAgo'=>self::getFirstTweetDaysAgo($timelineObj)
 		];
+	}
+
+	private static function getFromTwitter($username, $oldestID=null) {
+		try {
+			$data = self::call(self::$url, ['screen_name' => trim($username), 'count' => self::$tweetsPerIteration, 'max_id'=>$oldestID]);
+		} catch (\Exception $e) {
+			\BotsIL\CLI::endScript("Could not get tweets, error: ".$e->getMessage());
+		}
+		return \GuzzleHttp\json_decode($data, true);
 	}
 
 	private static function getRetweetsAndMentions($timelineObj) {
@@ -100,6 +129,25 @@ class Timeline extends API {
 			$items[$item['id']]=$item[$key];
 		}
 		return $items;
+	}
+
+	private static function getFirstTweetDaysAgo($timelineObj) {
+		$earliest = new \DateTime();
+		foreach ($timelineObj as $item) {
+			$tweetDate=new \DateTime($item['created_at']);
+			if ($tweetDate < $earliest) $earliest=$tweetDate;
+		}
+		$now = new \DateTime();
+		return $now->diff($earliest)->days;
+	}
+
+	private static function getOldestID($timelineObj) {
+		$earliestID=null;
+		foreach($timelineObj as $item) {
+			if ($earliestID==null) $earliestID=$item['id'];
+				elseif ($item['id'] < $earliestID) $earliestID=$item['id'];
+		}
+		return $earliestID;
 	}
 
 }

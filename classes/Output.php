@@ -56,6 +56,23 @@ class Output {
 		}
 	}
 
+	public static function tweetsPer($daysAgo, $total, $accountCreated, $totalTweets) {
+		$tableColumns = [40, 60];
+		$now = new \DateTime();
+		CLI::newLine();
+		CLI::out('Average tweets per', CLI::C_BROWN);
+		$createdAgo = $now->diff(new \DateTime($accountCreated))->days;
+		echo CLI_Table::Row([
+			$tableColumns,
+			[CLI::caption('Lifetime avg. (total '.$createdAgo.' days)'), round($totalTweets / $createdAgo, 2).' per day']
+		]);
+		echo CLI_Table::Row([
+			$tableColumns,
+			[CLI::caption('Last '.$total.' tweets avg.'), round($total/ $daysAgo, 2).' per day']
+		]);
+
+	}
+
 	public static function hours($hours) {
 		CLI::newLine();
 		CLI::out('Operating Hours', CLI::C_BROWN);
@@ -70,9 +87,11 @@ class Output {
 
 	public static function retweets($retweets, $total, $top=7) {
 		CLI::newLine();
-		$caption = CLI::prepare('Retweets (ratio is ', CLI::C_BROWN, false);
+		$caption = CLI::prepare('Retweets: ratio is ', CLI::C_BROWN, false);
 		$caption .= CLI::prepare(round((array_sum($retweets)/$total)*100).'%', CLI::C_RED, false);
-		$caption .= CLI::prepare(') ; showing top '.$top, CLI::C_BROWN);
+		$caption .= CLI::prepare(' retweets and ', CLI::C_BROWN, false);
+		$caption .= CLI::prepare(100-round((array_sum($retweets)/$total)*100).'%', CLI::C_RED, false);
+		$caption .= CLI::prepare(' original content ; showing top '.$top.' retweeted users', CLI::C_BROWN);
 		echo $caption;
 		$tableColumns = [30, 70];
 		arsort($retweets, SORT_NUMERIC);
@@ -105,7 +124,7 @@ class Output {
 
 	public static function favoritedUsers($favs, $total, $top=50) {
 		CLI::newLine();
-		echo CLI::prepare('Favorites Users (last '.$total.') ; showing top  '.$top.' favorited users', CLI::C_BROWN);
+		echo CLI::prepare('Favorited Users (last '.$total.') ; showing top  '.$top.' favorited users', CLI::C_BROWN);
 		$tableColumns = [30, 70];
 		$index=0;
 		foreach ($favs as $user=>$value) {

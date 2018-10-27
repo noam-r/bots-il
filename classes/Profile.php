@@ -11,6 +11,7 @@ class Profile {
 
 	public static function get(GetOpt $options) {
 		$username = trim($options->getOperand(0));
+		if (empty($username)) CLI::endScript("no username provided");
 		$userObj = User::get($username);
 		Output::user($userObj);
 		$timeline = Timeline::get($username);
@@ -19,6 +20,7 @@ class Profile {
 		$favedUsers = Favorites::getUsers($favedTweets);
 		Output::sources($timelineData['sources'], $timelineData['total']);
 		Output::languages($timelineData['languages'], $timelineData['total'], $userObj['lang']);
+		Output::tweetsPer($timelineData['firstDaysAgo'], $timelineData['total'], $userObj['created_at'], $userObj['statuses_count']);
 		Output::hours($timelineData['times']);
 		Output::weekdays($timelineData['weekdays']);
 		Output::retweets($timelineData['retweets'], $timelineData['total']);

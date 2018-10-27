@@ -31,14 +31,13 @@ class API {
 				$url.="?".http_build_query($params);
 				break;
 		}
-//echo "calling ".self::$domain.$url."\n";
-		$response = $client->request($method, self::$domain.$url, $options);
-//echo "got response\n";
-	//	var_dump($response);
-//echo "statuscode = ".$response->getStatusCode()."\n";
-//echo "response = ".$response->getBody()."\n";
-		if ($response->getStatusCode()==200) return $response->getBody();
-			else throw new \Exception('response error from twitter');
+		try {
+			$response = $client->request($method, self::$domain . $url, $options);
+			if ($response->getStatusCode() == 200) return $response->getBody();
+				else throw new \Exception('response error from twitter');
+		} catch (\Exception $e) {
+			return $e->getMessage();
+		}
 	}
 
 	private static function getBearer() {
