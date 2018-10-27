@@ -7,7 +7,7 @@ use BotsIL\CLI;
 class Timeline extends API {
 
 	static $url='1.1/statuses/user_timeline.json';
-	static $maxTotalTweets = 600;
+	static $maxTotalTweets = 1000;
 	static $tweetsPerIteration = 200;
 
 	private static $weekDays=['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -25,6 +25,7 @@ class Timeline extends API {
 			$earliestID = self::getOldestID($batch);
 			$tweets = array_merge($tweets, $batch);
 			if (count($tweets) >= self::$maxTotalTweets) break;
+			if (count($batch) < self::$tweetsPerIteration) break;
 			$iterations++;
 		}
 		CLI::newLine();
