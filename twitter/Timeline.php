@@ -19,13 +19,15 @@ class Timeline extends API {
 		echo CLI::prepare("Getting tweets", CLI::C_GREEN, false);
 		while ($iterations < (self::$maxTotalTweets/self::$tweetsPerIteration)) {
 			$batch = self::getFromTwitter($username, $earliestID);
+			//var_dump($batch);
+			//die();
 			$progress = round((count($tweets)+count($batch))/self::$maxTotalTweets*100);
 			echo CLI::prepare("...".$progress."%", CLI::C_GREEN, false);
 			if (empty($batch)) break;
 			$earliestID = self::getOldestID($batch);
 			$tweets = array_merge($tweets, $batch);
 			if (count($tweets) >= self::$maxTotalTweets) break;
-			if (count($batch) < self::$tweetsPerIteration) break;
+			if (count($batch) < self::$tweetsPerIteration*0.98) break; //allow some tolerance because sometimes 199 tweets are returned
 			$iterations++;
 		}
 		CLI::newLine();
@@ -43,6 +45,7 @@ class Timeline extends API {
 			'languages'=>self::getLanguages($timelineObj),
 			'weekdays'=>self::getWeekdays($timelineObj),
 			'times'=>self::getTimes($timelineObj),
+			'places'=>self::getGeoLocations($timelineObj),
 			'firstDaysAgo'=>self::getFirstTweetDaysAgo($timelineObj)
 		];
 	}
@@ -112,6 +115,18 @@ class Timeline extends API {
 		}
 		ksort($hours);
 		return $hours;
+	}
+
+	private static function getGeoLocations($timelineObj) {
+		$geoLocations=[];
+		$places = self::getItems($timelineObj, 'place');
+		foreach ($places as $place) {
+			if (empty($place)) continue;
+			$placeStr = $place['full_name'].' '.$place['country'];
+			if (!isset($geoLocations[$placeStr])) $geoLocations[$placeStr]=0;
+			$geoLocations[$placeStr]++;
+		}
+		return $geoLocations;
 	}
 
 	private static function getItemList($timelineObj, $key) {

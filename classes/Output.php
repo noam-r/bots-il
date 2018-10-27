@@ -122,6 +122,24 @@ class Output {
 
 	}
 
+	public static function places($places, $total, $top=10) {
+		CLI::newLine();
+		$caption = 'Places ('.round((array_sum($places)/$total)*100).'% tweets are geo-tagged)';
+		if (array_sum($places) > 0) $caption.='; showing top  '.$top.' places';
+		echo CLI::prepare($caption, CLI::C_BROWN);
+		if (array_sum($places) == 0) echo CLI::prepare('No geo-tagged tweets found', CLI::C_RED);
+		$tableColumns = [50, 50];
+		arsort($places, SORT_NUMERIC);
+		$index=0;
+		foreach ($places as $place=>$value) {
+			echo CLI_Table::Row([
+				$tableColumns,
+				[CLI::caption($place), $value.' ('.(round($value/$total)*100).'%)']
+			]);
+			if (++$index==$top) break;
+		}
+	}
+
 	public static function favoritedUsers($favs, $total, $top=50) {
 		CLI::newLine();
 		echo CLI::prepare('Favorited Users (last '.$total.') ; showing top  '.$top.' favorited users', CLI::C_BROWN);

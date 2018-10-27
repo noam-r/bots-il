@@ -21,6 +21,7 @@ class Profile {
 		Output::sources($timelineData['sources'], $timelineData['total']);
 		Output::languages($timelineData['languages'], $timelineData['total'], $userObj['lang']);
 		Output::tweetsPer($timelineData['firstDaysAgo'], $timelineData['total'], $userObj['created_at'], $userObj['statuses_count']);
+		Output::places($timelineData['places'], $timelineData['total']);
 		Output::hours($timelineData['times']);
 		Output::weekdays($timelineData['weekdays']);
 		Output::retweets($timelineData['retweets'], $timelineData['total']);
