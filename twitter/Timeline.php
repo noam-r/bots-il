@@ -19,8 +19,6 @@ class Timeline extends API {
 		echo CLI::prepare("Getting tweets", CLI::C_GREEN, false);
 		while ($iterations < (self::$maxTotalTweets/self::$tweetsPerIteration)) {
 			$batch = self::getFromTwitter($username, $earliestID);
-			//var_dump($batch);
-			//die();
 			$progress = round((count($tweets)+count($batch))/self::$maxTotalTweets*100);
 			echo CLI::prepare("...".$progress."%", CLI::C_GREEN, false);
 			if (empty($batch)) break;

@@ -15,6 +15,7 @@ class Profile {
 		$userObj = User::get($username);
 		Output::user($userObj);
 		$timeline = Timeline::get($username);
+		if (count($timeline)==0) CLI::endScript("No tweets found");
 		$timelineData=Timeline::parse($timeline);
 		$favedTweets =Favorites::get($username, 200);
 		$favedUsers = Favorites::getUsers($favedTweets);
